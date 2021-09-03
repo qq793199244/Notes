@@ -2,7 +2,7 @@
 - 定时删除
   - 介绍：当 key 的定时器过期时立刻对 key 进行删除。
   - 优点：节约内存，快速释放空间。
-  - 缺点：CPU压力大，无论当前 CPU 的负载多高均会立刻执行；影响Redis服务器的响应时间和指令吞吐量。
+  - 缺点：CPU 压力大，无论当前 CPU 的负载多高均会立刻执行；影响 Redis 服务器的响应时间和指令吞吐量。
   - 总结：用时间换空间
 - 惰性删除
   - 介绍：数据到达过期时间，不做处理。等下次访问该数据时：如果未过期，返回数据；发现已过期，删除，返回不存在。
@@ -14,7 +14,7 @@
   - **原理**：Redis 启动服务器初始化时，读取配置文件中 ```server.hz``` 的值，默认为 10 ；每秒钟执行 ```server.hz``` 次 ```serverCron()``` ；执行 ```serverCron()``` 时会在单个数据库执行 ```databasesCron()``` ；执行 ```databasesCron()``` 时会对 key 执行 ```activeExpireCycle()``` ；执行 ```activeExpireCycle()``` 时会随机挑选 W 个 key 进行检测：
     - 如果 key 超时，删除 key ；
     - 如果一轮中删除的 key 的数量 > W*25% ，循环该过程；
-    - 如果一轮中删除的 key 的数量 ≤ W*25% ，检查下一个 expires[*] ，0-15 循环；
+    - 如果一轮中删除的 key 的数量 ≤ W*25% ，检查下一个 expires[\*] ，0-15 循环；
     - W 取值= ```ACTIVE_EXPIRE_CYCLE_LOOKUPS_PER_L``` 。
 
    ![img](./img/Redis定期删除.png)
